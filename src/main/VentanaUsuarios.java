@@ -34,7 +34,7 @@ public class VentanaUsuarios extends JFrame{
 	
 	public boolean usado = false;
 	protected String valor;
-	
+
 	HashMap<String, Integer> usuarios = new HashMap<>();
 	
 	public VentanaUsuarios(){
@@ -50,7 +50,7 @@ public class VentanaUsuarios extends JFrame{
 	
 	try {
 		
-		sc = new Scanner(new File("res/txt/fileHola.txt"));
+		sc = new Scanner(new File("res/txt/usersLog.txt"));
 		while (sc.hasNextLine()) {
 			String linea = sc.nextLine();
 			
@@ -141,7 +141,7 @@ public class VentanaUsuarios extends JFrame{
 	public void escribeFichero() {
 		
 		try {
-			FileWriter fw = new FileWriter("res/txt/fileHola.txt", true);
+			FileWriter fw = new FileWriter("res/txt/usersLog.txt", true);
 			fw.append("\n" + nombre + " " + valorInt);
 			System.out.println("escrito");
 			fw.flush();
