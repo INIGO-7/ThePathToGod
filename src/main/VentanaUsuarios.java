@@ -50,7 +50,7 @@ public class VentanaUsuarios extends JFrame{
 	
 	try {
 		
-		sc = new Scanner(new File("fileHola.txt"));
+		sc = new Scanner(new File("res/txt/fileHola.txt"));
 		while (sc.hasNextLine()) {
 			String linea = sc.nextLine();
 			
@@ -141,7 +141,7 @@ public class VentanaUsuarios extends JFrame{
 	public void escribeFichero() {
 		
 		try {
-			FileWriter fw = new FileWriter("fileHola.txt", true);
+			FileWriter fw = new FileWriter("res/txt/fileHola.txt", true);
 			fw.append("\n" + nombre + " " + valorInt);
 			System.out.println("escrito");
 			fw.flush();

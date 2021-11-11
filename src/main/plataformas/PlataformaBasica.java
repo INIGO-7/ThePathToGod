@@ -28,7 +28,7 @@ public class PlataformaBasica extends PlataformaComponentes{
 
 	{
 	try {
-		platBasic = ImageIO.read(new File("plataformaBasicaSmallPTG.png"));
+		platBasic = ImageIO.read(new File("res/img/plataformaBasicaSmallPTG.png"));
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

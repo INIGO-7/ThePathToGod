@@ -83,7 +83,7 @@ public class Juego implements Runnable{
 		
 		{
 			try {
-				pantallaGanador = ImageIO.read(new File("winScreenPTG.png"));
+				pantallaGanador = ImageIO.read(new File("res/img/winScreenPTG.png"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -104,8 +104,8 @@ public class Juego implements Runnable{
 		
 		//preparo la pantalla para diobujar la nueva imagen
 
-		graphics.clearRect(0, 0, anchura, altura); //si no hicieramos esto la pantalla parpadea todo el rato.
-		
+		graphics.clearRect(0, 0, anchura, altura); //si no hicieramos esto la pantalla parpadea sin parar.
+
 		//dibujo en pantalla
 		
 		if(!eventosTeclado.arriba) jugando = -2250;

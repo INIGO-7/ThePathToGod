@@ -28,7 +28,7 @@ public class PlataformaTurbo extends PlataformaComponentes{
 	
 	{
 		try {
-			platTurbo = ImageIO.read(new File("plataformaTurboSmallPTG.png"));
+			platTurbo = ImageIO.read(new File("res/img/plataformaTurboSmallPTG.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

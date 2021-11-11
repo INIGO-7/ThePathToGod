@@ -31,8 +31,8 @@ public class Jugador {
 
 	{
 	try {
-		personaje = ImageIO.read(new File("playerFigurePTG.png"));
-		gameOver = ImageIO.read(new File("gameOver.png"));
+		personaje = ImageIO.read(new File("res/img/playerFigurePTG.png"));
+		gameOver = ImageIO.read(new File("res/img/gameOver.png"));
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -67,7 +67,7 @@ public class Jugador {
 		jX += movimientoX;
 		jY += movimientoY;
 		
-		if(jX > 300 - jugadorAnchura - 8) jX = jX = 1; //si se mueve hacia la dcha y se pasa de largo, le pongo en el límite de la pantalla
+		if(jX > 300 - jugadorAnchura - 8) jX = jX = 1; //si se mueve hacia la dcha y se pasa de largo, le pongo en el lï¿½mite de la pantalla
 		if(jX < 0) jX = 299 - jugadorAnchura - 8;												//lo mismo a la izq
 
 	}

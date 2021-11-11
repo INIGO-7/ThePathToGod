@@ -27,7 +27,7 @@ public class PlataformaHielo extends PlataformaComponentes{
 	
 	{
 		try {
-			platHielo = ImageIO.read(new File("plataformaHieloSmallPTG.png"));
+			platHielo = ImageIO.read(new File("res/img/plataformaHieloSmallPTG.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

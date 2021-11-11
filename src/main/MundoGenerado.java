@@ -35,7 +35,7 @@ public class MundoGenerado {
 	public void render(Graphics graphics) {
 	
 		try {
-			pantallaInicial = ImageIO.read(new File("pantallaFullPTG.png"));
+			pantallaInicial = ImageIO.read(new File("res/img/pantallaFullPTG.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
