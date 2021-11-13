@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,7 +30,7 @@ public class VentanaUsuarios extends JFrame{
 	
 	protected static boolean sesionIniciada = false;
 	protected static String nombre;
-	protected static int llaveUsuario; 
+	protected static int llaveUsuario;
 	protected static int valorInt;
 	
 	public boolean usado = false;
@@ -49,27 +50,16 @@ public class VentanaUsuarios extends JFrame{
 		this.setLayout(new FlowLayout());
 	
 	try {
-		
 		sc = new Scanner(new File("res/txt/usersLog.txt"));
-		while (sc.hasNextLine()) {
-			String linea = sc.nextLine();
-			
-			String[] campos = linea.split(" ");
-			
-			for (int k = 0; k < campos.length; k++) {
-				if(k == 0) {
-					nombre = campos[k];
-				}
-				if(k == 1) {
-					valor = campos[k];
-				}
-			}
 
-			int valorInt = Integer.parseInt(valor);
-			usuarios.put(nombre, valorInt);
-			
+		while (sc.hasNextLine()) {
+
+			String linea = sc.nextLine();
+			String[] lineaSplit = linea.split(" ");	//this will hold two values: the username (index 0)
+															//and the associated number of sessions played (index 1)
+			usuarios.put(lineaSplit[0], Integer.parseInt(lineaSplit[1]));
 			}
-			} catch (Exception e) {e.printStackTrace();}
+	} catch (Exception e) {e.printStackTrace();}
 	
 	
 	enseñarUsuarios = new Button("Informaci�n de usuarios");
@@ -134,18 +124,45 @@ public class VentanaUsuarios extends JFrame{
 						usuarios.put(nombre, 1);
 						valorInt = 1;
 					}
-				}escribeFichero();
+				}
+				escribeFichero();
 	}	
 	
 	
 	public void escribeFichero() {
 		
 		try {
-			FileWriter fw = new FileWriter("res/txt/usersLog.txt", true);
-			fw.append("\n" + nombre + " " + valorInt);
-			System.out.println("escrito");
-			fw.flush();
-			fw.close();
+			String existingName = null;
+			Scanner sc1 = new Scanner(new File("res/txt/usersLog.txt"));
+
+			while (sc1.hasNextLine()) {
+				String linea = sc1.nextLine();
+
+				if(Pattern.compile(nombre).matcher(linea).find()) {
+					existingName = linea;
+					break;
+				}
+			}
+
+			Scanner sc2 = new Scanner(new File("res/txt/usersLog.txt"));
+
+			//in filewriter, the second argument indicates whether or not the previous contents of the file will be overwritten.
+			//false means that the contents will be overwritten, while true means the text to write will be appended.
+
+			if(existingName == null) {
+				FileWriter fw = new FileWriter("res/txt/usersLog.txt", true);
+				fw.write(nombre + " " + valorInt + "\n");
+				fw.flush(); fw.close();
+			}else {
+				StringBuffer buffer = new StringBuffer();
+				while (sc2.hasNextLine()) buffer.append(sc2.nextLine() + System.lineSeparator());    //I put the whole file into a stringbuffer.
+
+				FileWriter fw = new FileWriter("res/txt/usersLog.txt", false);
+				fw.write(buffer.toString().replaceAll(existingName, nombre + " " + valorInt));
+				//I change the number of sessions played by the user and afterwards append the whole file contents updated.
+				fw.flush(); fw.close();
+			}
+
 		}catch(Exception ex) {ex.printStackTrace();}
 	}
 	
