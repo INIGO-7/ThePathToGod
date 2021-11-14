@@ -7,7 +7,10 @@ import main.VentanaUsuarios;
 
 public class EventosTeclado implements KeyListener{
 
-	public boolean dcha = false, izq = false, arriba = false;
+	private boolean dcha = false;
+	private boolean izq = false;
+	private boolean arriba = false;
+
 	public void keyPressed(KeyEvent event) {
 		
 		if(event.getKeyCode() == KeyEvent.VK_UP) arriba = true;
@@ -21,5 +24,16 @@ public class EventosTeclado implements KeyListener{
 	}
 	
 	public void keyTyped(KeyEvent event) {}
-		
+
+	public boolean isDcha() {return dcha;}
+
+	public void setDcha(boolean dcha) {this.dcha = dcha;}
+
+	public boolean isIzq() {return izq;}
+
+	public void setIzq(boolean izq) {this.izq = izq;}
+
+	public boolean isArriba() {return arriba;}
+
+	public void setArriba(boolean arriba) {this.arriba = arriba;}
 }

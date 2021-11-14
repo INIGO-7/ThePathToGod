@@ -13,7 +13,7 @@ import main.input.EventosTeclado;
 
 public class Jugador {
 
-	public int jX = 132, jY = 300, movimientoX, movimientoY;
+	private int jX = 132, jY = 300, movimientoX, movimientoY;
 	long tiempoPasado, tiempo, tiempoAnterior = System.nanoTime();
 	public int jugadorAltura = 50, jugadorAnchura = 30;
 	private BufferedImage personaje, gameOver;
@@ -21,6 +21,7 @@ public class Jugador {
 	private Juego juego;
 	private static int VELOCIDAD_LATERAL_JUGADOR = 4;
 	private Graphics graphics;
+
 	private Rectangle jugadorArea;
 	private Rectangle areaSalto;
 	
@@ -53,11 +54,11 @@ public class Jugador {
 	
 	public void jugadorMovimiento() {
 		
-		if(eventosTeclado.dcha) movimientoX =  VELOCIDAD_LATERAL_JUGADOR;
+		if(eventosTeclado.isDcha()) movimientoX =  VELOCIDAD_LATERAL_JUGADOR;
 		
-		if(eventosTeclado.izq) movimientoX = -VELOCIDAD_LATERAL_JUGADOR;
+		if(eventosTeclado.isIzq()) movimientoX = -VELOCIDAD_LATERAL_JUGADOR;
 		
-		if(!eventosTeclado.izq && !eventosTeclado.dcha) movimientoX = 0;
+		if(!eventosTeclado.isIzq() && !eventosTeclado.isDcha()) movimientoX = 0;
 		
 		colisionesLimitesPantalla();
 	}
@@ -79,7 +80,7 @@ public class Jugador {
 		jugadorArea = new Rectangle(jX, jY, jugadorAnchura, jugadorAltura);
 		
 		if(jY < 50) {
-			juego.mundo++;
+			juego.setMundo(juego.getMundo() + 1);
 			jY = 250;
 			movimientoY = -1;
 		}
@@ -93,6 +94,10 @@ public class Jugador {
 		this.jY = jY;
 	}
 
+	public int getjX() { return jX; }
+
+	public void setjX(int jX) {	this.jX = jX; }
+
 	public Rectangle getJugadorArea() {
 		return jugadorArea;
 	}
@@ -101,7 +106,6 @@ public class Jugador {
 		this.jugadorArea = jugadorArea;
 	}
 
-	
 	public Rectangle getAreaSalto() {
 		return areaSalto;
 	}

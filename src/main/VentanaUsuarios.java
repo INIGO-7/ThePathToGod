@@ -33,7 +33,7 @@ public class VentanaUsuarios extends JFrame{
 	protected static int llaveUsuario;
 	protected static int valorInt;
 	
-	public boolean usado = false;
+	private boolean usado = false;
 	protected String valor;
 
 	HashMap<String, Integer> usuarios = new HashMap<>();

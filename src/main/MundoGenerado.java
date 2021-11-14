@@ -17,14 +17,14 @@ import main.plataformas.PlataformaTurbo;
 
 public class MundoGenerado {
 
-	BufferedImage pantallaInicial;
+	private BufferedImage pantallaInicial;
 	private Juego juego;
 	//private Random random = new Random();
 	private int aleatorio, posicionX;
 	protected int salto;
-	PlataformaBasica a;
-	PlataformaHielo b;
-	PlataformaTurbo c;
+	private PlataformaBasica a;
+	private PlataformaHielo b;
+	private PlataformaTurbo c;
 	
 	public MundoGenerado(Juego juego) {
 		

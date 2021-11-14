@@ -35,7 +35,7 @@ public class Juego implements Runnable{
 	
 	private Jugador jugador;
 	private int abajoDcha, abajoIzq, arribaIzq, arribaDcha, i, c = 1;
-	public int mundo = 1;
+	private int mundo = 1;
 	private int movPlataformas = 0;
 
 	private Plataformas p;
@@ -79,7 +79,7 @@ public class Juego implements Runnable{
 		ventana.getCanvas().addMouseListener(eventosRaton);
 		ventana.getCanvas().addMouseMotionListener(eventosRaton);
 		ventana.addKeyListener(eventosTeclado);
-		plataformas = p.plataformas;
+		plataformas = p.getPlataformas();
 		
 		{
 			try {
@@ -108,13 +108,13 @@ public class Juego implements Runnable{
 
 		//dibujo en pantalla
 		
-		if(!eventosTeclado.arriba) jugando = -2250;
+		if(!eventosTeclado.isArriba()) jugando = -2250;
 		else if(jugando < -1800) jugando += 3;
 		//else jugando += 4;
 		
 		mundoGenerado.render(graphics);
 		
-		if(eventosTeclado.arriba) 
+		if(eventosTeclado.isArriba())
 			jugador.render(graphics);
 				
 		if(jugando > -1801) 
@@ -144,8 +144,8 @@ public class Juego implements Runnable{
 			
 			}else if(mundo == 2) {
 			
-				p.plataformas.clear();
-				p.rectangulos.clear();
+				p.getPlataformas().clear();
+				p.getRectangulos().clear();
 				p.añadirPlataforma(new PlataformaBasica(40, 350));
 				p.createRect(40, 350, 1);
 				p.añadirPlataforma(new PlataformaBasica(120, 260));
@@ -157,8 +157,8 @@ public class Juego implements Runnable{
 			
 			}else if(mundo == 3) {
 				
-				p.plataformas.clear();
-				p.rectangulos.clear();
+				p.getPlataformas().clear();
+				p.getRectangulos().clear();
 				p.añadirPlataforma(new PlataformaBasica(280, 350));
 				p.createRect(280, 350, 1);
 				p.añadirPlataforma(new PlataformaBasica(0, 310));
@@ -171,7 +171,7 @@ public class Juego implements Runnable{
 				p.createRect(150, 80, 1);
 			}else{
 				graphics.drawImage(pantallaGanador, 0, 0, null);
-				jugador.movimientoY = 0;
+				jugador.setMovimientoY(0);
 			}	
 			
 		//actualizo lo dibujado
@@ -187,10 +187,12 @@ public class Juego implements Runnable{
 		
 		colisionJugador = jugador.getAreaSalto();
 			
-		ArrayList<Rectangle> rectangulos = p.rectangulos;
+		ArrayList<Rectangle> rectangulos = p.getRectangulos();
 		
 		for(Rectangle r : rectangulos) {
-			if(r.intersects(colisionJugador)) jugador.movimientoY = -4;
+			if(r.intersects(colisionJugador)) {
+				jugador.setMovimientoY(-4);
+			}
 			/*{
 				if()
 			}*/
@@ -203,7 +205,7 @@ public class Juego implements Runnable{
 		colisionesPlataformaJugador();
 		p.tick();
 		
-		if(eventosTeclado.arriba && c == 1) {
+		if(eventosTeclado.isArriba() && c == 1) {
 			ventanaUsuarios.añadirPartida();
 			c--;
 		}	
@@ -258,6 +260,10 @@ public class Juego implements Runnable{
 			
 		}stop();
 	}
+
+	public int getMundo(){return mundo;}
+
+	public void setMundo(int mundo){this.mundo = mundo;}
 	
 	public static void main(String args[]) {
 		Juego juego = new Juego("Path To God", 300, 450);

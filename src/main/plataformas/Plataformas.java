@@ -10,15 +10,15 @@ public class Plataformas {
 	private PlataformaBasica plataformaBasica;
 	private PlataformaHielo plataformaHielo;
 	private PlataformaTurbo plataformaTurbo;
-	public ArrayList<PlataformaComponentes> plataformas;
+	private ArrayList<PlataformaComponentes> plataformas;
 	private int saltoBasico = plataformaBasica.SALTO;
 	private int saltoTurbo = plataformaTurbo.SALTO;
 	private Rectangle colisionPlataforma;
 	private int anchuraPlat = 20, alturaPlat = 10;
 	private Rectangle colisiones;
 	private int x, y, tipo;
-	public ArrayList<Rectangle> rectangulos = new ArrayList<Rectangle>();
-	
+	private ArrayList<Rectangle> rectangulos = new ArrayList<Rectangle>();
+
 	public Plataformas(PlataformaBasica plataformaBasica, PlataformaHielo plataformaHielo, PlataformaTurbo plataformaTurbo) {
 		plataformas = new ArrayList<PlataformaComponentes>();
 		
@@ -60,5 +60,13 @@ public class Plataformas {
 	public int getType() {
 		return tipo;
 	}
+
+	public ArrayList<PlataformaComponentes> getPlataformas(){ return plataformas; }
+
+	public void setPlataformas(ArrayList<PlataformaComponentes> plataformas){ this.plataformas = plataformas; }
+
+	public ArrayList<Rectangle> getRectangulos() {return rectangulos;}
+
+	public void setRectangulos(ArrayList<Rectangle> rectangulos) {this.rectangulos = rectangulos;}
 
 }
