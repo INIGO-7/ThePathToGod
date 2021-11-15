@@ -13,20 +13,13 @@ import javax.imageio.ImageIO;
 public class PlataformaBasica extends PlataformaComponentes{
 
 	private BufferedImage platBasic;
-	private int anchuraPlat = 20, alturaPlat = 10;
-	private int spawnX, spawnY;
-	private Rectangle platColision;
-	protected static int SALTO = -4;
-	private ArrayList<Rectangle> colisiones = new ArrayList<>();
-	
-	public PlataformaBasica(int spawnX, int spawnY) {
-		this.spawnX = spawnX;
-		this.spawnY = spawnY;
-		platColision = new Rectangle(spawnX, spawnY, anchuraPlat, 5);
-		colisiones.add(platColision);
-	}
+	private final int ANCHURA_PLAT = 20, ALTURA_PLAT = 5;
 
-	{
+	public PlataformaBasica(int spawnX, int spawnY) {
+		super(spawnX, spawnY);
+		salto = -4;
+		platColision = new Rectangle(spawnX, spawnY, ANCHURA_PLAT, ALTURA_PLAT);
+
 		try {
 			platBasic = ImageIO.read(new File("res/img/plataformaBasicaSmallPTG.png"));
 		} catch (IOException e) {
@@ -34,17 +27,26 @@ public class PlataformaBasica extends PlataformaComponentes{
 			e.printStackTrace();
 		}
 	}
+
+	public void move(){
+
+		if(platX > 299 - ANCHURA_PLAT || platX < 1) movementX = -movementX;
+		platX += movementX;
+		platColision.setLocation((int) platColision.getX() + movementX, (int) platColision.getY());
+
+	}
 	
 	public void render(Graphics graphics) {
 		
 	
-		graphics.drawImage(platBasic, spawnX, spawnY, null);
-		graphics.setColor(Color.red);
-		//graphics.fillRect(spawnX, spawnY, platColision.width, 5);
+		graphics.drawImage(platBasic, platX, platY, null);
+
 	}
 	
 	public void tick() {
-		
+
+		move();
+
 	}
 
 	public Rectangle getPlatColision() {
@@ -56,19 +58,5 @@ public class PlataformaBasica extends PlataformaComponentes{
 		this.platColision = platColision;
 		
 	}
-	
-	public ArrayList<Rectangle> getRect() {
-		return colisiones;
-	}
-
-	public static int getSALTO() {
-		return SALTO;
-	}
-
-	public int getSpawnX(){ return this.spawnX; }
-	public void setSpawnX(int spawnX){ this.spawnX = spawnX; }
-
-	public int getSpawnY(){ return this.spawnY; }
-	public void setSpawnY(int spawnY){ this.spawnY = spawnY; }
 
 }

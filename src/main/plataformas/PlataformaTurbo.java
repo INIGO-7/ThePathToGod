@@ -11,22 +11,16 @@ import javax.imageio.ImageIO;
 
 public class PlataformaTurbo extends PlataformaComponentes{
 
-
 	private BufferedImage platTurbo;
-	protected static int SALTO = -8;
-	public int spawnX, spawnY;
 	private int anchuraPlat = 20, alturaPlat = 10;
 	//private ArrayList<Rectangle> colisiones = new ArrayList<Rectangle>();
 	private Rectangle platColision;
 	
 	public PlataformaTurbo(int spawnX, int spawnY) {
-		this.spawnX = spawnX;
-		this.spawnY = spawnY;
+		super(spawnX, spawnY);
+		salto = -8;
 		platColision = new Rectangle(spawnX, spawnY, anchuraPlat, 5);
-		//this.colisiones.add(platColision);
-	}
-	
-	{
+
 		try {
 			platTurbo = ImageIO.read(new File("res/img/plataformaTurboSmallPTG.png"));
 		} catch (IOException e) {
@@ -34,22 +28,17 @@ public class PlataformaTurbo extends PlataformaComponentes{
 			e.printStackTrace();
 		}
 	}
+
+	public void move(){
+
+	}
 	
 	public void render(Graphics graphics) {
-		graphics.drawImage(platTurbo, spawnX, spawnY, null);
+		graphics.drawImage(platTurbo, platX, platY, null);
 	}
 	
 	public void tick() {
-		platColision = new Rectangle(spawnX, spawnY, anchuraPlat, alturaPlat);
 		
-	}
-	
-	public static int getSALTO() {
-		return SALTO;
-	}
-	
-	public Rectangle getPlatColision() {
-		return platColision;
 	}
 	
 //	public ArrayList<Rectangle> getRect() {
@@ -59,11 +48,5 @@ public class PlataformaTurbo extends PlataformaComponentes{
 	public void setPlatColision(Rectangle platColision) {
 		this.platColision = platColision;
 	}
-
-	public int getSpawnX(){ return this.spawnX; }
-	public void setSpawnX(int spawnX){ this.spawnX = spawnX; }
-
-	public int getSpawnY(){ return this.spawnY; }
-	public void setSpawnY(int spawnY){ this.spawnY = spawnY; }
 
 }

@@ -13,8 +13,6 @@ public class PlatformManager {
 	private ArrayList<PlataformaComponentes> plataformas;	//we create an array of PlataformaComponentes (this is the parent abstract class for ice, turbo and basic platforms)
 	private ArrayList<Rectangle> rectangulos;
 
-	private final int saltoBasico = plataformaBasica.SALTO;
-	private final int saltoTurbo = plataformaTurbo.SALTO;
 	private Rectangle colisionPlataforma;
 	private int anchuraPlat = 20, alturaPlat = 10;
 	private int x, y;
@@ -38,7 +36,8 @@ public class PlatformManager {
 
 	public void createPlatform(PlataformaComponentes p){
 		plataformas.add(p);
-		rectangulos.add(new Rectangle(p.getSpawnX(), p.getSpawnY(), anchuraPlat, alturaPlat));
+		rectangulos.add(p.getRect());	//we add the original collisions rectangle to an arraylist containing every platform,
+										//to check afterwards whether the player intersects with it or not.
 	}
 
 	public ArrayList<PlataformaComponentes> getPlataformas(){ return plataformas; }
