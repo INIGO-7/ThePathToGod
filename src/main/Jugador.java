@@ -31,13 +31,13 @@ public class Jugador {
 	}
 
 	{
-	try {
-		personaje = ImageIO.read(new File("res/img/playerFigurePTG.png"));
-		gameOver = ImageIO.read(new File("res/img/gameOver.png"));
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	};
+		try {
+			personaje = ImageIO.read(new File("res/img/playerFigurePTG.png"));
+			gameOver = ImageIO.read(new File("res/img/gameOver.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void render(Graphics graphics) {
@@ -68,7 +68,7 @@ public class Jugador {
 		jX += movimientoX;
 		jY += movimientoY;
 		
-		if(jX > 300 - jugadorAnchura - 8) jX = jX = 1; //si se mueve hacia la dcha y se pasa de largo, le pongo en el l�mite de la pantalla
+		if(jX > 300 - jugadorAnchura - 8) jX = 1; //si se mueve hacia la dcha y se pasa de largo, le pongo en el l�mite de la pantalla
 		if(jX < 0) jX = 299 - jugadorAnchura - 8;												//lo mismo a la izq
 
 	}
@@ -80,7 +80,6 @@ public class Jugador {
 		jugadorArea = new Rectangle(jX, jY, jugadorAnchura, jugadorAltura);
 		
 		if(jY < 50) {
-			juego.setMundo(juego.getMundo() + 1);
 			jY = 250;
 			movimientoY = -1;
 		}
@@ -135,7 +134,7 @@ public class Jugador {
 		tiempo = System.nanoTime();
 		tiempoPasado = tiempo - tiempoAnterior;
 		
-		if(juego.jugando == -1800 && movimientoY < 5) {
+		if(juego.getJugando() == -1800 && movimientoY < 5) {
 			if(tiempoPasado > 200000000) {
 				tiempoAnterior = tiempo;
 				tiempoPasado = 0;

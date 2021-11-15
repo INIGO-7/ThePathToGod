@@ -2,18 +2,9 @@ package main;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
 
-import javax.imageio.ImageIO;
-import javax.net.ssl.KeyManager;
-
-import main.input.EventosTeclado;
 import main.plataformas.PlataformaBasica;
-import main.plataformas.PlataformaHielo;
-import main.plataformas.PlataformaTurbo;
+import main.plataformas.PlatformManager;
 
 public class MundoGenerado {
 
@@ -22,28 +13,33 @@ public class MundoGenerado {
 	//private Random random = new Random();
 	private int aleatorio, posicionX;
 	protected int salto;
-	private PlataformaBasica a;
-	private PlataformaHielo b;
-	private PlataformaTurbo c;
+	private PlatformManager plats;
 	
 	public MundoGenerado(Juego juego) {
-		
 		this.juego = juego;
-	
+		plats = new PlatformManager();
 	}
-	
+
+	public void init(){
+		plats.createPlatform(new PlataformaBasica(140, 380));
+	}
+
+	public void tick(){
+
+		plats.tick();
+
+	}
+
 	public void render(Graphics graphics) {
-	
-		try {
-			pantallaInicial = ImageIO.read(new File("res/img/pantallaFullPTG.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		};
-		
-		graphics.drawImage(pantallaInicial, 0, juego.jugando, null);
+
+		plats.render(juego.getGraphics());
 		
 	}
+
+	//el jugador se mueve de lado a lado, y no puede superar una altura máxima en la pantalla, si supera esa altura las plataformas
+	//se moverán hacia abajo.
+
+	//hay que hacer que el jugador funcione (tick y render actualizándose) hasta que muera. Así una vez muerto no se gastarán recursos.
 	
 	public void generarMundo() {
 		
@@ -52,6 +48,10 @@ public class MundoGenerado {
 		//aleatorio = random.nextInt(10);
 		//posicionX = random.nextInt(300);	
 		
+	}
+
+	public PlatformManager getPlats(){
+		return plats;
 	}
 	
 }

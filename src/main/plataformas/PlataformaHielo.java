@@ -13,10 +13,10 @@ public class PlataformaHielo extends PlataformaComponentes{
 	
 	protected static int SALTO = - 4, DESLIZAMIENTO = 2; 
 	private BufferedImage platHielo;
-	public int spawnX = 122, spawnY = 300;
+	public int spawnX, spawnY;
 	private int anchuraPlat = 20, alturaPlat = 10;
 	private ArrayList<Rectangle> colisiones = new ArrayList<Rectangle>();
-	private Rectangle platColision = new Rectangle(spawnX, spawnY, anchuraPlat, alturaPlat);
+	private Rectangle platColision;
 	
 	public PlataformaHielo(int spawnX, int spawnY) {
 		this.spawnX = spawnX;
@@ -31,8 +31,8 @@ public class PlataformaHielo extends PlataformaComponentes{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		};
 		}
+	}
 	
 	public void render(Graphics graphics) {
 		graphics.drawImage(platHielo, spawnX, spawnY, null);
@@ -62,5 +62,11 @@ public class PlataformaHielo extends PlataformaComponentes{
 	public void setPlatColision(Rectangle platColision) {
 		this.platColision = platColision;
 	}
+
+	public int getSpawnX(){ return this.spawnX; }
+	public void setSpawnX(int spawnX){ this.spawnX = spawnX; }
+
+	public int getSpawnY(){ return this.spawnY; }
+	public void setSpawnY(int spawnY){ this.spawnY = spawnY; }
 
 }

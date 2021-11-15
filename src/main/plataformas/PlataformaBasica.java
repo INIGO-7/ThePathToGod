@@ -14,10 +14,10 @@ public class PlataformaBasica extends PlataformaComponentes{
 
 	private BufferedImage platBasic;
 	private int anchuraPlat = 20, alturaPlat = 10;
-	public int spawnX, spawnY;
-	private Rectangle platColision = new Rectangle(spawnX, spawnY, anchuraPlat, alturaPlat);
+	private int spawnX, spawnY;
+	private Rectangle platColision;
 	protected static int SALTO = -4;
-	private ArrayList<Rectangle> colisiones = new ArrayList<Rectangle>();
+	private ArrayList<Rectangle> colisiones = new ArrayList<>();
 	
 	public PlataformaBasica(int spawnX, int spawnY) {
 		this.spawnX = spawnX;
@@ -27,12 +27,12 @@ public class PlataformaBasica extends PlataformaComponentes{
 	}
 
 	{
-	try {
-		platBasic = ImageIO.read(new File("res/img/plataformaBasicaSmallPTG.png"));
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	};
+		try {
+			platBasic = ImageIO.read(new File("res/img/plataformaBasicaSmallPTG.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void render(Graphics graphics) {
@@ -64,5 +64,11 @@ public class PlataformaBasica extends PlataformaComponentes{
 	public static int getSALTO() {
 		return SALTO;
 	}
+
+	public int getSpawnX(){ return this.spawnX; }
+	public void setSpawnX(int spawnX){ this.spawnX = spawnX; }
+
+	public int getSpawnY(){ return this.spawnY; }
+	public void setSpawnY(int spawnY){ this.spawnY = spawnY; }
 
 }

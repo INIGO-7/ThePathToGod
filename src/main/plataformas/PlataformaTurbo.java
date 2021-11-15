@@ -14,10 +14,10 @@ public class PlataformaTurbo extends PlataformaComponentes{
 
 	private BufferedImage platTurbo;
 	protected static int SALTO = -8;
-	public int spawnX = 122, spawnY = 350;
+	public int spawnX, spawnY;
 	private int anchuraPlat = 20, alturaPlat = 10;
 	//private ArrayList<Rectangle> colisiones = new ArrayList<Rectangle>();
-	private Rectangle platColision = new Rectangle(spawnX, spawnY, anchuraPlat, alturaPlat);
+	private Rectangle platColision;
 	
 	public PlataformaTurbo(int spawnX, int spawnY) {
 		this.spawnX = spawnX;
@@ -32,8 +32,8 @@ public class PlataformaTurbo extends PlataformaComponentes{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		};
 		}
+	}
 	
 	public void render(Graphics graphics) {
 		graphics.drawImage(platTurbo, spawnX, spawnY, null);
@@ -59,5 +59,11 @@ public class PlataformaTurbo extends PlataformaComponentes{
 	public void setPlatColision(Rectangle platColision) {
 		this.platColision = platColision;
 	}
+
+	public int getSpawnX(){ return this.spawnX; }
+	public void setSpawnX(int spawnX){ this.spawnX = spawnX; }
+
+	public int getSpawnY(){ return this.spawnY; }
+	public void setSpawnY(int spawnY){ this.spawnY = spawnY; }
 
 }

@@ -9,15 +9,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.html.HTMLDocument.Iterator;
 
 import main.input.EventosRaton;
 import main.input.EventosTeclado;
-import main.plataformas.PlataformaBasica;
 import main.plataformas.PlataformaComponentes;
-import main.plataformas.PlataformaHielo;
-import main.plataformas.PlataformaTurbo;
-import main.plataformas.Plataformas;
 
 public class Juego implements Runnable{
 	
@@ -35,21 +30,15 @@ public class Juego implements Runnable{
 	
 	private Jugador jugador;
 	private int abajoDcha, abajoIzq, arribaIzq, arribaDcha, i, c = 1;
-	private int mundo = 1;
 	private int movPlataformas = 0;
 
-	private Plataformas p;
-	private PlataformaBasica plataformaBasica;
-	private PlataformaHielo plataformaHielo;
-	private PlataformaTurbo plataformaTurbo;
-	private Rectangle colisionJugador, colisionPlataformaBasica, colisionPlataformaTurbo, colisionPlataformaHielo;
-	
-	
+	private Rectangle colisionJugador;
+	private BufferedImage pantallaInicial;
 	private String titulo;
 	private int anchura, altura;
-	int jugando = -450;
+	private int jugando = -450;
 	private Graphics graphics;
-	
+
 	public Juego(String titulo, int anchura, int altura) {
 		this.titulo = titulo;
 		this.anchura = anchura;
@@ -61,14 +50,6 @@ public class Juego implements Runnable{
 		jugador = new Jugador(eventosTeclado, this);
 		mundoGenerado = new MundoGenerado(this);
 		
-		plataformaBasica = new PlataformaBasica(122, 400);
-		plataformaTurbo = new PlataformaTurbo(40, 400);
-		plataformaHielo = new PlataformaHielo(200, 400);
-		p = new Plataformas(plataformaBasica, plataformaHielo, plataformaTurbo);
-		p.createRect(122, 400, 1);
-		p.createRect(40, 400, 2);
-		p.createRect(200, 400, 3);
-		
 	}
 
 	ArrayList<PlataformaComponentes> plataformas;
@@ -79,7 +60,7 @@ public class Juego implements Runnable{
 		ventana.getCanvas().addMouseListener(eventosRaton);
 		ventana.getCanvas().addMouseMotionListener(eventosRaton);
 		ventana.addKeyListener(eventosTeclado);
-		plataformas = p.getPlataformas();
+		mundoGenerado.init();
 		
 		{
 			try {
@@ -87,19 +68,19 @@ public class Juego implements Runnable{
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			};
 			}
+		}
 	}
 	
 	private void render() {
-		
+
 		bs = ventana.getCanvas().getBufferStrategy();
 		if(bs == null) {
 			//System.out.println("null");
 			ventana.getCanvas().createBufferStrategy(3);
 			return;
 		}
-		
+
 		graphics = bs.getDrawGraphics();
 		
 		//preparo la pantalla para diobujar la nueva imagen
@@ -107,73 +88,30 @@ public class Juego implements Runnable{
 		graphics.clearRect(0, 0, anchura, altura); //si no hicieramos esto la pantalla parpadea sin parar.
 
 		//dibujo en pantalla
-		
+
+		if(pantallaInicial == null){
+			try {
+				pantallaInicial = ImageIO.read(new File("res/img/pantallaFullPTG.png"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		graphics.drawImage(pantallaInicial, 0, jugando, null);
+
 		if(!eventosTeclado.isArriba()) jugando = -2250;
 		else if(jugando < -1800) jugando += 3;
 		//else jugando += 4;
 		
-		mundoGenerado.render(graphics);
-		
 		if(eventosTeclado.isArriba())
 			jugador.render(graphics);
 				
-		if(jugando > -1801) 
-			p.render(graphics);
-			//movPlataformas += 4;
-			
-			
-			if(mundo == 1) {
-			
-				p.añadirPlataforma(new PlataformaBasica(200, 320));
-				p.createRect(200, 320, 1);
-				p.añadirPlataforma(new PlataformaBasica(110, 240));
-				p.createRect(110, 240, 1);
-				p.añadirPlataforma(new PlataformaBasica(100, 210));
-				p.createRect(100, 210, 1);
-				p.añadirPlataforma(new PlataformaBasica(150, 120));
-				p.createRect(150, 120, 1);
-				p.añadirPlataforma(new PlataformaBasica(50, 320));
-				p.createRect(50, 320, 1);
-				p.añadirPlataforma(new PlataformaBasica(50, 240));
-				p.createRect(50, 240, 1);
-				p.añadirPlataforma(new PlataformaBasica(50, 210));
-				p.createRect(50, 210, 1);
-				p.añadirPlataforma(new PlataformaBasica(50, 120));
-				p.createRect(50, 120, 1);
-			
-			
-			}else if(mundo == 2) {
-			
-				p.getPlataformas().clear();
-				p.getRectangulos().clear();
-				p.añadirPlataforma(new PlataformaBasica(40, 350));
-				p.createRect(40, 350, 1);
-				p.añadirPlataforma(new PlataformaBasica(120, 260));
-				p.createRect(120, 260, 1);
-				p.añadirPlataforma(new PlataformaBasica(150, 180));
-				p.createRect(150, 180, 1);	
-				p.añadirPlataforma(new PlataformaBasica(200, 130));
-				p.createRect(200, 130, 1);
-			
-			}else if(mundo == 3) {
-				
-				p.getPlataformas().clear();
-				p.getRectangulos().clear();
-				p.añadirPlataforma(new PlataformaBasica(280, 350));
-				p.createRect(280, 350, 1);
-				p.añadirPlataforma(new PlataformaBasica(0, 310));
-				p.createRect(0, 310, 1);
-				p.añadirPlataforma(new PlataformaBasica(260, 220));
-				p.createRect(260, 220, 1);
-				p.añadirPlataforma(new PlataformaBasica(0, 150));
-				p.createRect(0, 150, 1);
-				p.añadirPlataforma(new PlataformaBasica(150, 80));
-				p.createRect(150, 80, 1);
-			}else{
-				graphics.drawImage(pantallaGanador, 0, 0, null);
-				jugador.setMovimientoY(0);
-			}	
-			
+		if(jugando > -1801) {
+			mundoGenerado.tick();
+			mundoGenerado.render(graphics);
+		}
+
 		//actualizo lo dibujado
 		
 		{
@@ -187,7 +125,7 @@ public class Juego implements Runnable{
 		
 		colisionJugador = jugador.getAreaSalto();
 			
-		ArrayList<Rectangle> rectangulos = p.getRectangulos();
+		ArrayList<Rectangle> rectangulos = mundoGenerado.getPlats().getRectangulos();
 		
 		for(Rectangle r : rectangulos) {
 			if(r.intersects(colisionJugador)) {
@@ -203,7 +141,6 @@ public class Juego implements Runnable{
 		eventosRaton.tick();
 		jugador.tick();
 		colisionesPlataformaJugador();
-		p.tick();
 		
 		if(eventosTeclado.isArriba() && c == 1) {
 			ventanaUsuarios.añadirPartida();
@@ -215,7 +152,7 @@ public class Juego implements Runnable{
 	public synchronized void start() {
 		
 		thread = new Thread(this);
-		thread.run();
+		thread.start();
 		
 	}
 
@@ -261,11 +198,13 @@ public class Juego implements Runnable{
 		}stop();
 	}
 
-	public int getMundo(){return mundo;}
+	public int getJugando() {return jugando;}
 
-	public void setMundo(int mundo){this.mundo = mundo;}
+	public void setJugando(int jugando) {this.jugando = jugando;}
+
+	public Graphics getGraphics() { return graphics; }
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		Juego juego = new Juego("Path To God", 300, 450);
 		juego.start();
 	}
