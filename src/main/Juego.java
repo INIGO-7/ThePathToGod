@@ -124,10 +124,8 @@ public class Juego implements Runnable{
 		
 		
 		colisionJugador = jugador.getAreaSalto();
-			
-		ArrayList<Rectangle> rectangulos = mundoGenerado.getPlats().getRectangulos();
 		
-		for(Rectangle r : rectangulos) {
+		for(Rectangle r : mundoGenerado.getPlats().getRectangulos()) {
 			if(r.intersects(colisionJugador)) {
 				jugador.setMovimientoY(-4);
 			}
@@ -203,6 +201,8 @@ public class Juego implements Runnable{
 	public void setJugando(int jugando) {this.jugando = jugando;}
 
 	public Graphics getGraphics() { return graphics; }
+
+	public Jugador getJugador(){ return jugador; }
 	
 	public static void main(String[] args) {
 		Juego juego = new Juego("Path To God", 300, 450);

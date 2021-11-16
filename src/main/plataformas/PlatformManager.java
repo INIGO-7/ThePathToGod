@@ -3,6 +3,7 @@ package main.plataformas;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class PlatformManager {
 	
@@ -10,16 +11,16 @@ public class PlatformManager {
 	private PlataformaBasica plataformaBasica;
 	private PlataformaHielo plataformaHielo;
 	private PlataformaTurbo plataformaTurbo;
-	private ArrayList<PlataformaComponentes> plataformas;	//we create an array of PlataformaComponentes (this is the parent abstract class for ice, turbo and basic platforms)
-	private ArrayList<Rectangle> rectangulos;
+	private LinkedList<PlataformaComponentes> plataformas;	//we create an array of PlataformaComponentes (this is the parent abstract class for ice, turbo and basic platforms)
+	private LinkedList<Rectangle> rectangulos;
 
 	private Rectangle colisionPlataforma;
 	private int anchuraPlat = 20, alturaPlat = 10;
 	private int x, y;
 
 	public PlatformManager() {
-		plataformas = new ArrayList<PlataformaComponentes>();
-		rectangulos = new ArrayList<Rectangle>();
+		plataformas = new LinkedList<PlataformaComponentes>();
+		rectangulos = new LinkedList<Rectangle>();
 	}
 	
 	public void render(Graphics graphics) {
@@ -40,12 +41,12 @@ public class PlatformManager {
 										//to check afterwards whether the player intersects with it or not.
 	}
 
-	public ArrayList<PlataformaComponentes> getPlataformas(){ return plataformas; }
+	public LinkedList<PlataformaComponentes> getPlataformas(){ return plataformas; }
 
-	public void setPlataformas(ArrayList<PlataformaComponentes> plataformas){ this.plataformas = plataformas; }
+	public void setPlataformas(LinkedList<PlataformaComponentes> plataformas){ this.plataformas = plataformas; }
 
-	public ArrayList<Rectangle> getRectangulos() {return rectangulos;}
+	public LinkedList<Rectangle> getRectangulos() {return rectangulos;}
 
-	public void setRectangulos(ArrayList<Rectangle> rectangulos) {this.rectangulos = rectangulos;}
+	public void setRectangulos(LinkedList<Rectangle> rectangulos) {this.rectangulos = rectangulos;}
 
 }

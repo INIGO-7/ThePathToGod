@@ -13,7 +13,7 @@ import main.input.EventosTeclado;
 
 public class Jugador {
 
-	private int jX = 132, jY = 300, movimientoX, movimientoY;
+	private int jX = 132, jY = 250, movimientoX, movimientoY;
 	long tiempoPasado, tiempo, tiempoAnterior = System.nanoTime();
 	public int jugadorAltura = 50, jugadorAnchura = 30;
 	private BufferedImage personaje, gameOver;

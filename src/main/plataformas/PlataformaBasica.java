@@ -37,8 +37,7 @@ public class PlataformaBasica extends PlataformaComponentes{
 	}
 	
 	public void render(Graphics graphics) {
-		
-	
+
 		graphics.drawImage(platBasic, platX, platY, null);
 
 	}
@@ -52,7 +51,6 @@ public class PlataformaBasica extends PlataformaComponentes{
 	public Rectangle getPlatColision() {
 		return platColision;
 	}
-
 
 	public void setPlatColision(Rectangle platColision) {
 		this.platColision = platColision;
