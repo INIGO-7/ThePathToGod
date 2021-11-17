@@ -24,23 +24,25 @@ public class MundoGenerado {
 		manager = new PlatformManager();
 		randX = new Random();
 		randY = new Random();
+		lastjY = 350; // the point at which the first automatically generated platform will be created.
 	}
 
 	public void init(){
 
-		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), 30));
-		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 50));
-		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 125));
-		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 200));
-		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 275));
-		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 350));
+		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), 550));
 		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 475));
-		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 550));
+		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 350));
+		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 275));
+		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 200));
+		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 125));
+		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 50));
+		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 30));
 	}
 
 	public void tick(){
 
 		manager.tick();
+		worldManager();
 
 	}
 
@@ -55,12 +57,13 @@ public class MundoGenerado {
 
 	//hay que hacer que el jugador funcione (tick y render actualizándose) hasta que muera. Así una vez muerto no se gastarán recursos.
 	
-	public void generarMundo() {
-
+	public void worldManager() {
+		System.out.println(manager.getPlataformas().size());
 		newJY = juego.getJugador().getjY();
 
-		if(lastjY > newJY - 200){
-
+		if(lastjY > newJY + 200){
+			System.out.println("coleka");
+			lastjY = newJY;
 			LinkedList<PlataformaComponentes> allPlatforms = manager.getPlataformas();
 
 			//the first platform in the list (last platform that the player has seen) is removed.
@@ -68,7 +71,8 @@ public class MundoGenerado {
 			//remove element from memory manually? or will garbage collector do the job well??
 
 			//now a new higher platform than the last one created will be added.
-			manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + allPlatforms.getLast().getPlatY()));
+			manager.createPlatform(new PlataformaBasica(randX.nextInt(260),
+					allPlatforms.getLast().getPlatY() - 75 - randX.nextInt(30)));
 
 		}
 

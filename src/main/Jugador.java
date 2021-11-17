@@ -78,11 +78,7 @@ public class Jugador {
 		gravedad();
 		areaSalto = new Rectangle(jX, jY + 49, jugadorAnchura, 1);
 		jugadorArea = new Rectangle(jX, jY, jugadorAnchura, jugadorAltura);
-		
-		if(jY < 50) {
-			jY = 250;
-			movimientoY = -1;
-		}
+
 	}
 
 	public int getjY() {
