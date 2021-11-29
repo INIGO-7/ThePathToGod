@@ -6,13 +6,11 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import main.input.EventosRaton;
 import main.input.EventosTeclado;
-import main.plataformas.PlataformaComponentes;
 
 public class Juego implements Runnable{
 	
@@ -22,7 +20,7 @@ public class Juego implements Runnable{
 	private BufferStrategy bs;
 	private BufferedImage pantallaGanador;
 	
-	private MundoGenerado mundoGenerado;
+	private World world;
 	private EventosRaton eventosRaton;
 	private EventosTeclado eventosTeclado;
 	
@@ -48,7 +46,7 @@ public class Juego implements Runnable{
 		eventosTeclado = new EventosTeclado();
 		
 		jugador = new Jugador(eventosTeclado, this);
-		mundoGenerado = new MundoGenerado(this);
+		world = new World(this);
 		
 	}
 	
@@ -58,7 +56,7 @@ public class Juego implements Runnable{
 		ventana.getCanvas().addMouseListener(eventosRaton);
 		ventana.getCanvas().addMouseMotionListener(eventosRaton);
 		ventana.addKeyListener(eventosTeclado);
-		mundoGenerado.init();
+		world.init();
 		
 		{
 			try {
@@ -106,8 +104,8 @@ public class Juego implements Runnable{
 			jugador.render(graphics);
 				
 		if(jugando > -1801) {
-			mundoGenerado.tick();
-			mundoGenerado.render(graphics);
+			world.tick();
+			world.render(graphics);
 		}
 
 		//actualizo lo dibujado
@@ -117,26 +115,10 @@ public class Juego implements Runnable{
 		bs.show();
 		}
 	}
-	
-	public void colisionesPlataformaJugador() {
-
-		colisionJugador = jugador.getAreaSalto();
-		
-		for(Rectangle r : mundoGenerado.getManager().getRectangulos()) {
-			if(r.intersects(colisionJugador)) {
-				if(jugador.getjY() < 150 && jugador.getSpeedY() == 0){
-					mundoGenerado.getManager().setPlatformsYspeed(4);
-				}else{
-					jugador.setSpeedY(-4);
-				}
-			}
-		}
-	}
 
 	public void tick()	{
 		eventosRaton.tick();
 		jugador.tick();
-		colisionesPlataformaJugador();
 		
 		if(eventosTeclado.isArriba() && c == 1) {
 			ventanaUsuarios.añadirPartida();
@@ -169,7 +151,7 @@ public class Juego implements Runnable{
 		Comienzo();
 		int frames = 0;
 		
-		while(running) { 								//funciona todo el rato
+		while(running) { 								//always working
 			
 			float tiempo = 1000000000/60;				//1 segundo = 1000000000 nanosegs, queremos que llame a render y tick cada 1/60 de segundo. 			
 			float tiempoAhora = System.nanoTime();

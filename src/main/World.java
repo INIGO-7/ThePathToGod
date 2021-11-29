@@ -1,6 +1,6 @@
 package main;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Random;
@@ -9,7 +9,7 @@ import main.plataformas.PlataformaBasica;
 import main.plataformas.PlataformaComponentes;
 import main.plataformas.PlatformManager;
 
-public class MundoGenerado {
+public class World {
 
 	private BufferedImage pantallaInicial;
 	private Juego juego;
@@ -18,18 +18,21 @@ public class MundoGenerado {
 	private int aleatorio, posicionX;
 	protected int salto;
 	private PlatformManager manager;
+	private boolean platGravity;
+	private Rectangle playerCollisionsRect;
 
 	//TODO: automatic removal of each removed platform's collision rectangle.
 	//TODO: make platforms go down as the player goes higher so it seems as if the player is going up.
-	//TODO: altitude threshold for the player which mustn't surpass. The platforms going down will do the job.
+	//TODO: altitude limit that the player will not surpass. The platforms going down will do the job.
 	//TODO: a way to count the altitude that the player reaches (for scorecounting and knowing when and how the platforms should move)
 
-	public MundoGenerado(Juego juego) {
+	public World(Juego juego) {
 		this.juego = juego;
 		manager = new PlatformManager();
 		randX = new Random();
 		randY = new Random();
 		lastjY = 350; // the point at which the first automatically generated platform will be created.
+		platGravity = true; //we want everything enabled from the beginning.
 	}
 
 	public void init(){
@@ -46,7 +49,7 @@ public class MundoGenerado {
 
 		manager.tick();
 		worldManager();
-
+		playerCollisions();
 	}
 
 	public void render(Graphics graphics) {
@@ -81,25 +84,47 @@ public class MundoGenerado {
 
 		}
 
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/*
+		The last lines of code of this function will handle movement. We will have to decide if gravity should be applied
 
-		if(juego.getJugador().getjY() < 150 && juego.getJugador().getSpeedY() != 0) {
+		*/
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		if(!(manager.getPlatformsYspeed() >= 0)) {
+			//as we are going to give
+			//have gravity again.
+			manager.setPlatformsYspeed(0);
+			platGravity = false;
+		} else if(juego.getJugador().getjY() < 150 && juego.getJugador().getSpeedY() != 0 && platGravity) {
 			//if the player just passed the 150 pixels limit, we make the platforms move by setting their speed to the
-			//player's, then set the player's speed to 0
+			//player's, then set the player's speed to 0. We want this to happen once.
 			manager.setPlatformsYspeed(Math.abs(juego.getJugador().getSpeedY()));
 			juego.getJugador().setSpeedY(0);
 
-		}else if(juego.getJugador().getjY() < 150 && juego.getJugador().getSpeedY() == 0){
+		}else if(juego.getJugador().getjY() < 150 && juego.getJugador().getSpeedY() == 0 && platGravity){
 			//gravity for the platforms only works above the 150 pixel threshold and when the player is not moving.
 			manager.gravity();
 
-		}else if(manager.getPlatformsYspeed() < 0) {
-			//when the platforms lose their speed, we no longer want to apply gravity to them, instead the player will
-			//have gravity again.
-			manager.setPlatformsYspeed(0);
 		}else{
 			juego.getJugador().gravedad();
 		}
+	}
 
+	public void playerCollisions() {
+
+		playerCollisionsRect = juego.getJugador().getAreaSalto();
+
+		for(Rectangle r : manager.getRectangulos()) {
+			if(r.intersects(playerCollisionsRect)) {
+				if(juego.getJugador().getjY() < 150 && juego.getJugador().getSpeedY() == 0){
+					manager.setPlatformsYspeed(4);
+				}else{
+					juego.getJugador().setSpeedY(-4);
+					platGravity = true;
+				}
+			}
+		}
 	}
 
 	public PlatformManager getManager(){
