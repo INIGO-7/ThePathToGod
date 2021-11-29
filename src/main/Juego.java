@@ -51,8 +51,6 @@ public class Juego implements Runnable{
 		mundoGenerado = new MundoGenerado(this);
 		
 	}
-
-	ArrayList<PlataformaComponentes> plataformas;
 	
 	private void Comienzo() {
 		
@@ -120,18 +118,18 @@ public class Juego implements Runnable{
 		}
 	}
 	
-	public void colisionesPlataformaJugador() {	
-		
-		
+	public void colisionesPlataformaJugador() {
+
 		colisionJugador = jugador.getAreaSalto();
 		
-		for(Rectangle r : mundoGenerado.getPlats().getRectangulos()) {
+		for(Rectangle r : mundoGenerado.getManager().getRectangulos()) {
 			if(r.intersects(colisionJugador)) {
-				jugador.setMovimientoY(-4);
+				if(jugador.getjY() < 150 && jugador.getSpeedY() == 0){
+					mundoGenerado.getManager().setPlatformsYspeed(4);
+				}else{
+					jugador.setSpeedY(-4);
+				}
 			}
-			/*{
-				if()
-			}*/
 		}
 	}
 

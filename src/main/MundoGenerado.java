@@ -18,7 +18,12 @@ public class MundoGenerado {
 	private int aleatorio, posicionX;
 	protected int salto;
 	private PlatformManager manager;
-	
+
+	//TODO: automatic removal of each removed platform's collision rectangle.
+	//TODO: make platforms go down as the player goes higher so it seems as if the player is going up.
+	//TODO: altitude threshold for the player which mustn't surpass. The platforms going down will do the job.
+	//TODO: a way to count the altitude that the player reaches (for scorecounting and knowing when and how the platforms should move)
+
 	public MundoGenerado(Juego juego) {
 		this.juego = juego;
 		manager = new PlatformManager();
@@ -29,9 +34,7 @@ public class MundoGenerado {
 
 	public void init(){
 
-		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), 550));
-		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 475));
-		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 350));
+		manager.createPlatform(new PlataformaBasica(150, randY.nextInt(30) + 350));
 		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 275));
 		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 200));
 		manager.createPlatform(new PlataformaBasica(randX.nextInt(260), randY.nextInt(30) + 125));
@@ -48,7 +51,7 @@ public class MundoGenerado {
 
 	public void render(Graphics graphics) {
 
-		manager.render(juego.getGraphics());
+		manager.render(graphics);
 		
 	}
 
@@ -58,11 +61,13 @@ public class MundoGenerado {
 	//hay que hacer que el jugador funcione (tick y render actualizándose) hasta que muera. Así una vez muerto no se gastarán recursos.
 	
 	public void worldManager() {
-		System.out.println(manager.getPlataformas().size());
+
 		newJY = juego.getJugador().getjY();
 
-		if(lastjY > newJY + 200){
-			System.out.println("coleka");
+		System.out.println(manager.getPlataformas().size());
+
+		if(manager.getPlataformas().getFirst().getPlatY() > 450){
+
 			lastjY = newJY;
 			LinkedList<PlataformaComponentes> allPlatforms = manager.getPlataformas();
 
@@ -76,10 +81,28 @@ public class MundoGenerado {
 
 		}
 
-		
+
+		if(juego.getJugador().getjY() < 150 && juego.getJugador().getSpeedY() != 0) {
+			//if the player just passed the 150 pixels limit, we make the platforms move by setting their speed to the
+			//player's, then set the player's speed to 0
+			manager.setPlatformsYspeed(Math.abs(juego.getJugador().getSpeedY()));
+			juego.getJugador().setSpeedY(0);
+
+		}else if(juego.getJugador().getjY() < 150 && juego.getJugador().getSpeedY() == 0){
+			//gravity for the platforms only works above the 150 pixel threshold and when the player is not moving.
+			manager.gravity();
+
+		}else if(manager.getPlatformsYspeed() < 0) {
+			//when the platforms lose their speed, we no longer want to apply gravity to them, instead the player will
+			//have gravity again.
+			manager.setPlatformsYspeed(0);
+		}else{
+			juego.getJugador().gravedad();
+		}
+
 	}
 
-	public PlatformManager getPlats(){
+	public PlatformManager getManager(){
 		return manager;
 	}
 	

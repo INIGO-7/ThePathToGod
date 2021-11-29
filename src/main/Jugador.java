@@ -13,7 +13,7 @@ import main.input.EventosTeclado;
 
 public class Jugador {
 
-	private int jX = 132, jY = 250, movimientoX, movimientoY;
+	private int jX = 132, jY = 250, speedX, speedY;
 	long tiempoPasado, tiempo, tiempoAnterior = System.nanoTime();
 	public int jugadorAltura = 50, jugadorAnchura = 30;
 	private BufferedImage personaje, gameOver;
@@ -45,7 +45,7 @@ public class Jugador {
 		if(!(jY > 450)) {
 		graphics.drawImage(personaje, jX, jY, null);
 		}else{
-			movimientoY = 0;
+			speedY = 0;
 			graphics.drawImage(gameOver, 0, 0, null);
 		}	
 		//graphics.setColor(Color.red);
@@ -54,19 +54,19 @@ public class Jugador {
 	
 	public void jugadorMovimiento() {
 		
-		if(eventosTeclado.isDcha()) movimientoX =  VELOCIDAD_LATERAL_JUGADOR;
+		if(eventosTeclado.isDcha()) speedX =  VELOCIDAD_LATERAL_JUGADOR;
 		
-		if(eventosTeclado.isIzq()) movimientoX = -VELOCIDAD_LATERAL_JUGADOR;
+		if(eventosTeclado.isIzq()) speedX = -VELOCIDAD_LATERAL_JUGADOR;
 		
-		if(!eventosTeclado.isIzq() && !eventosTeclado.isDcha()) movimientoX = 0;
+		if(!eventosTeclado.isIzq() && !eventosTeclado.isDcha()) speedX = 0;
 		
 		colisionesLimitesPantalla();
 	}
 	
 	public void colisionesLimitesPantalla() {
 			
-		jX += movimientoX;
-		jY += movimientoY;
+		jX += speedX;
+		jY += speedY;
 		
 		if(jX > 300 - jugadorAnchura - 8) jX = 1; //si se mueve hacia la dcha y se pasa de largo, le pongo en el l�mite de la pantalla
 		if(jX < 0) jX = 299 - jugadorAnchura - 8;												//lo mismo a la izq
@@ -75,7 +75,6 @@ public class Jugador {
 	
 	public void tick() {
 		jugadorMovimiento();
-		gravedad();
 		areaSalto = new Rectangle(jX, jY + 49, jugadorAnchura, 1);
 		jugadorArea = new Rectangle(jX, jY, jugadorAnchura, jugadorAltura);
 
@@ -109,20 +108,20 @@ public class Jugador {
 		this.areaSalto = areaSalto;
 	}
 
-	public int getMovimientoX() {
-		return movimientoX;
+	public int getSpeedX() {
+		return speedX;
 	}
 
-	public void setMovimientoX(int movimientoX) {
-		this.movimientoX = movimientoX;
+	public void setSpeedX(int speedX) {
+		this.speedX = speedX;
 	}
 
-	public int getMovimientoY() {
-		return movimientoY;
+	public int getSpeedY() {
+		return speedY;
 	}
 
-	public void setMovimientoY(int movimientoY) {
-		this.movimientoY = movimientoY;
+	public void setSpeedY(int speedY) {
+		this.speedY = speedY;
 	}
 	
 	public void gravedad(){
@@ -130,15 +129,13 @@ public class Jugador {
 		tiempo = System.nanoTime();
 		tiempoPasado = tiempo - tiempoAnterior;
 		
-		if(juego.getJugando() == -1800 && movimientoY < 5) {
+		if(juego.getJugando() == -1800 && speedY < 5) {
 			if(tiempoPasado > 200000000) {
 				tiempoAnterior = tiempo;
 				tiempoPasado = 0;
-				movimientoY += 1;
+				speedY += 1;
 			}
 		}	
 	}
-	
-	
 	
 }

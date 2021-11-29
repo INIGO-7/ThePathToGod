@@ -13,11 +13,12 @@ import javax.imageio.ImageIO;
 public class PlataformaBasica extends PlataformaComponentes{
 
 	private BufferedImage platBasic;
-	private final int ANCHURA_PLAT = 20, ALTURA_PLAT = 5;
 
 	public PlataformaBasica(int spawnX, int spawnY) {
 		super(spawnX, spawnY);
 		salto = -4;
+		ANCHURA_PLAT = 20;
+		ALTURA_PLAT = 5;
 		platColision = new Rectangle(spawnX, spawnY, ANCHURA_PLAT, ALTURA_PLAT);
 
 		try {
@@ -27,14 +28,6 @@ public class PlataformaBasica extends PlataformaComponentes{
 			e.printStackTrace();
 		}
 	}
-
-	public void move(){
-
-		if(platX > 299 - ANCHURA_PLAT || platX < 1) movementX = -movementX;
-		platX += movementX;
-		platColision.setLocation((int) platColision.getX() + movementX, (int) platColision.getY());
-
-	}
 	
 	public void render(Graphics graphics) {
 
@@ -43,9 +36,7 @@ public class PlataformaBasica extends PlataformaComponentes{
 	}
 	
 	public void tick() {
-
-		move();
-
+		platformMovementX();
 	}
 
 	public Rectangle getPlatColision() {

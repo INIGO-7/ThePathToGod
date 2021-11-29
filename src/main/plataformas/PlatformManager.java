@@ -24,15 +24,23 @@ public class PlatformManager {
 	}
 	
 	public void render(Graphics graphics) {
-		for(PlataformaComponentes p : plataformas) {
-			p.render(graphics);
-		}
+		for(PlataformaComponentes p : plataformas) p.render(graphics);
 	}
 	
 	public void tick() {
-		for(PlataformaComponentes p : plataformas) {
-			p.tick();
-		}
+		for(PlataformaComponentes p : plataformas) p.tick();
+	}
+
+	public void gravity(){
+		for(PlataformaComponentes p : plataformas) p.gravity();
+	}
+
+	public void setPlatformsYspeed(int spy){
+		for(PlataformaComponentes p: plataformas) p.setSpeedY(spy);
+	}
+
+	public int getPlatformsYspeed(){
+		return plataformas.getFirst().getSpeedY();
 	}
 
 	public void createPlatform(PlataformaComponentes p){
