@@ -12,60 +12,60 @@ import javax.imageio.ImageIO;
 import main.input.EventosRaton;
 import main.input.EventosTeclado;
 
-public class Juego implements Runnable{
+public class Game implements Runnable{
 	
 	private Thread thread;
 	private Boolean running = false;
 	private Ventana ventana;
 	private BufferStrategy bs;
-	private BufferedImage pantallaGanador;
+	private BufferedImage pantallaInicial, pantallaGanador, gameOver;
 	
 	private World world;
 	private EventosRaton eventosRaton;
 	private EventosTeclado eventosTeclado;
 	
-	private VentanaUsuarios ventanaUsuarios = new VentanaUsuarios();
+	private VentanaUsuarios ventanaUsuarios;
 	
-	private Jugador jugador;
+	private Player player;
 	private int abajoDcha, abajoIzq, arribaIzq, arribaDcha, i, c = 1;
 	private int movPlataformas = 0;
 
 	private Rectangle colisionJugador;
-	private BufferedImage pantallaInicial;
 	private String titulo;
 	private int anchura, altura;
-	private int jugando = -450;
 	private Graphics graphics;
 
-	public Juego(String titulo, int anchura, int altura) {
+	public Game(String titulo, int anchura, int altura) {
 		this.titulo = titulo;
 		this.anchura = anchura;
 		this.altura = altura;
-		
+
+		try {
+			pantallaInicial = ImageIO.read(new File("res/img/pantallaFullPTG.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			pantallaGanador = ImageIO.read(new File("res/img/winScreenPTG.png"));
+			gameOver = ImageIO.read(new File("res/img/gameOver.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		eventosRaton = new EventosRaton();
 		eventosTeclado = new EventosTeclado();
-		
-		jugador = new Jugador(eventosTeclado, this);
-		world = new World(this);
-		
-	}
-	
-	private void Comienzo() {
-		
-		ventana = new Ventana(titulo, anchura, altura);		
+
+		ventanaUsuarios = new VentanaUsuarios();
+		player = new Player(eventosTeclado);
+		world = new World(this, eventosTeclado);
+		world.init();
+
+		ventana = new Ventana(titulo, anchura, altura);
 		ventana.getCanvas().addMouseListener(eventosRaton);
 		ventana.getCanvas().addMouseMotionListener(eventosRaton);
 		ventana.addKeyListener(eventosTeclado);
-		world.init();
 		
-		{
-			try {
-				pantallaGanador = ImageIO.read(new File("res/img/winScreenPTG.png"));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	private void render() {
@@ -85,28 +85,33 @@ public class Juego implements Runnable{
 
 		//dibujo en pantalla
 
-		if(pantallaInicial == null){
-			try {
-				pantallaInicial = ImageIO.read(new File("res/img/pantallaFullPTG.png"));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if(!eventosTeclado.isArriba()){
+			//If the up arrow is not pressed, just render the initial image.
+			graphics.drawImage(pantallaInicial, 0, -2250, null);
+		}else if(world.getPlayer().getjY() < 450){
+			//If the up arrow is pressed and the player is on the screen (has not fallen), render the world.
+			world.render(graphics);
+		}else{
+			//If the player has fallen, render the gameover image.
+			graphics.drawImage(gameOver, 0, 0, null);
 		}
 
-		graphics.drawImage(pantallaInicial, 0, jugando, null);
+		/*
+		graphics.drawImage(pantallaInicial, 0, screenY, null);
 
-		if(!eventosTeclado.isArriba()) jugando = -2250;
-		else if(jugando < -1800) jugando += 3;
+		if(!eventosTeclado.isArriba()) screenY = -2250;
+		else if(screenY < -1800) screenY += 3;
 		//else jugando += 4;
 		
 		if(eventosTeclado.isArriba())
 			jugador.render(graphics);
 				
-		if(jugando > -1801) {
+		if(screenY > -1801) {
 			world.tick();
 			world.render(graphics);
 		}
+		*/
+
 
 		//actualizo lo dibujado
 		
@@ -116,15 +121,20 @@ public class Juego implements Runnable{
 		}
 	}
 
-	public void tick()	{
+	public void tick(){
 		eventosRaton.tick();
-		jugador.tick();
-		
+		player.tick();
+
+		if(world.getPlayer().getjY() < 450 && eventosTeclado.isArriba()){
+			world.tick();
+		}
+
+		/*
 		if(eventosTeclado.isArriba() && c == 1) {
 			ventanaUsuarios.añadirPartida();
 			c--;
 		}	
-		
+		*/
 	}
 
 	public synchronized void start() {
@@ -148,7 +158,6 @@ public class Juego implements Runnable{
 		//gameLoop: ponemos cuantas veces se han de usar render y tick. Lo haremos 60 veces por segundo.
 		running = true;
 		float tiempoAntes = System.nanoTime();
-		Comienzo();
 		int frames = 0;
 		
 		while(running) { 								//always working
@@ -176,16 +185,19 @@ public class Juego implements Runnable{
 		}stop();
 	}
 
-	public int getJugando() {return jugando;}
-
-	public void setJugando(int jugando) {this.jugando = jugando;}
-
 	public Graphics getGraphics() { return graphics; }
 
-	public Jugador getJugador(){ return jugador; }
+	public Player getPlayer(){ return player; }
+
+	public VentanaUsuarios getVentanaUsuarios(){ return ventanaUsuarios; }
+
+	public BufferedImage getPantallaInicial(){
+		return pantallaInicial;
+	}
 	
 	public static void main(String[] args) {
-		Juego juego = new Juego("Path To God", 300, 450);
-		juego.start();
+		Game game = new Game("Path To God", 300, 450);
+		game.start();
 	}
+
 }

@@ -2,37 +2,49 @@ package main;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
 
+import main.input.EventosTeclado;
 import main.plataformas.PlataformaBasica;
 import main.plataformas.PlataformaComponentes;
 import main.plataformas.PlatformManager;
 
+import javax.imageio.ImageIO;
+
 public class World {
 
 	private BufferedImage pantallaInicial;
-	private Juego juego;
+	private Game game;
 	private Random randX, randY;
-	private int lastjY,  newJY;
-	private int aleatorio, posicionX;
+	private int lastjY, newJY, screenY, aleatorio, posicionX;
 	protected int salto;
 	private PlatformManager manager;
-	private boolean platGravity;
+	private boolean platGravity, gameCreated;
 	private Rectangle playerCollisionsRect;
+	private EventosTeclado evt;
+	private Player player;
 
 	//TODO: automatic removal of each removed platform's collision rectangle.
-	//TODO: make platforms go down as the player goes higher so it seems as if the player is going up.
-	//TODO: altitude limit that the player will not surpass. The platforms going down will do the job.
+	//TODO: make infinite platforms work correctly
 	//TODO: a way to count the altitude that the player reaches (for scorecounting and knowing when and how the platforms should move)
 
-	public World(Juego juego) {
-		this.juego = juego;
+	public World(Game game, EventosTeclado evt) {
+		this.game = game;
+		this.evt = evt;
+		player = new Player(evt);
 		manager = new PlatformManager();
+		pantallaInicial = game.getPantallaInicial();
+
 		randX = new Random();
 		randY = new Random();
+
+		screenY = -2250;
 		lastjY = 350; // the point at which the first automatically generated platform will be created.
 		platGravity = true; //we want everything enabled from the beginning.
+		gameCreated = false; //it will be true when the game is created by pressing the up arrow (the game begins)
 	}
 
 	public void init(){
@@ -47,15 +59,32 @@ public class World {
 
 	public void tick(){
 
-		manager.tick();
+		player.tick();
+
 		worldManager();
 		playerCollisions();
+
+		//we check if the user has pressed the up arrow (i.e wants to start playing)
+		if(evt.isArriba() && !gameCreated) {
+			game.getVentanaUsuarios().añadirPartida();
+			gameCreated = true;
+		}
+
+		if(screenY >= -1801){
+			manager.tick();
+		}
 	}
 
-	public void render(Graphics graphics) {
+	public void render(Graphics g) {
 
-		manager.render(graphics);
-		
+		if(screenY < -1801){
+			g.drawImage(pantallaInicial, 0, screenY+=3, null);
+		}else{
+			g.drawImage(pantallaInicial, 0, 0, null);
+			manager.render(g);	//renders the platforms only when the image stops moving and we start to play.
+		}
+
+		player.render(g);
 	}
 
 	//el jugador se mueve de lado a lado, y no puede superar una altura máxima en la pantalla, si supera esa altura las plataformas
@@ -65,9 +94,7 @@ public class World {
 	
 	public void worldManager() {
 
-		newJY = juego.getJugador().getjY();
-
-		System.out.println(manager.getPlataformas().size());
+		newJY = player.getjY();
 
 		if(manager.getPlataformas().getFirst().getPlatY() > 450){
 
@@ -86,8 +113,11 @@ public class World {
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/*
-		The last lines of code of this function will handle movement. We will have to decide if gravity should be applied
-
+		The last lines of code of this function will handle movement. We will have to decide how the player goes up
+		depending on the 150 pixel threshold that is set. As long as the player is under that limit, all good. But if
+		the player is above that threshold (we dont want to go much	higher because that way we wouldn't see the player),
+		the platforms will get the player's momentum and gravity will be applied to them all. When gravity makes
+		platforms loose their momentum, the player will have its gravity back.
 		*/
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -96,35 +126,44 @@ public class World {
 			//have gravity again.
 			manager.setPlatformsYspeed(0);
 			platGravity = false;
-		} else if(juego.getJugador().getjY() < 150 && juego.getJugador().getSpeedY() != 0 && platGravity) {
+		} else if(player.getjY() < 150 && player.getSpeedY() != 0 && platGravity) {
 			//if the player just passed the 150 pixels limit, we make the platforms move by setting their speed to the
 			//player's, then set the player's speed to 0. We want this to happen once.
-			manager.setPlatformsYspeed(Math.abs(juego.getJugador().getSpeedY()));
-			juego.getJugador().setSpeedY(0);
+			manager.setPlatformsYspeed(Math.abs(player.getSpeedY()));
+			player.setSpeedY(0);
 
-		}else if(juego.getJugador().getjY() < 150 && juego.getJugador().getSpeedY() == 0 && platGravity){
+		}else if(player.getjY() < 150 && player.getSpeedY() == 0 && platGravity){
 			//gravity for the platforms only works above the 150 pixel threshold and when the player is not moving.
 			manager.gravity();
 
 		}else{
-			juego.getJugador().gravedad();
+			if(screenY >= -1801) player.gravedad();
 		}
 	}
 
 	public void playerCollisions() {
 
-		playerCollisionsRect = juego.getJugador().getAreaSalto();
+		playerCollisionsRect = player.getAreaSalto();	//gets the "feet" area of the player
 
-		for(Rectangle r : manager.getRectangulos()) {
-			if(r.intersects(playerCollisionsRect)) {
-				if(juego.getJugador().getjY() < 150 && juego.getJugador().getSpeedY() == 0){
+		for(Rectangle r : manager.getRectangulos()) {	//checks all the platform collision area
+			if(r.intersects(playerCollisionsRect)) {	//if any of the platforms contain the area of the player's "feet"
+
+				//if the player is neither above the 150 pixels threshold or moving in the Y axis, the movement that is
+				//generated by touching a platform will make the player go up by pushing the platforms down:
+				if(player.getjY() < 150 && player.getSpeedY() == 0){
 					manager.setPlatformsYspeed(4);
+
+				//else, the player will go up by "jumping" on the platform
 				}else{
-					juego.getJugador().setSpeedY(-4);
+					player.setSpeedY(-4);
 					platGravity = true;
 				}
 			}
 		}
+	}
+
+	public Player getPlayer(){
+		return player;
 	}
 
 	public PlatformManager getManager(){
