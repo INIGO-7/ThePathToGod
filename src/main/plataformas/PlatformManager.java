@@ -15,8 +15,7 @@ public class PlatformManager {
 	private LinkedList<Rectangle> rectangulos;
 
 	private Rectangle colisionPlataforma;
-	private int anchuraPlat = 20, alturaPlat = 10;
-	private int x, y;
+	private int anchuraPlat = 20, alturaPlat = 10, x, y, distanceTravelled, platformsYspeed;
 
 	public PlatformManager() {
 		plataformas = new LinkedList<PlataformaComponentes>();
@@ -29,6 +28,9 @@ public class PlatformManager {
 	
 	public void tick() {
 		for(PlataformaComponentes p : plataformas) p.tick();
+
+		platformsYspeed = getPlatformsYspeed();
+		if(platformsYspeed > 0) distanceTravelled += getPlatformsYspeed();
 	}
 
 	public void gravity(){
@@ -56,5 +58,7 @@ public class PlatformManager {
 	public LinkedList<Rectangle> getRectangulos() {return rectangulos;}
 
 	public void setRectangulos(LinkedList<Rectangle> rectangulos) {this.rectangulos = rectangulos;}
+
+	public int getDistanceTravelled(){ return distanceTravelled; }
 
 }

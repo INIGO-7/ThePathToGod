@@ -19,7 +19,10 @@ public class Game implements Runnable{
 	private Ventana ventana;
 	private BufferStrategy bs;
 	private BufferedImage pantallaInicial, pantallaGanador, gameOver;
-	
+
+	private String gameName;
+	private int windowHeight, windowWidth;
+
 	private World world;
 	private EventosRaton eventosRaton;
 	private EventosTeclado eventosTeclado;
@@ -31,14 +34,12 @@ public class Game implements Runnable{
 	private int movPlataformas = 0;
 
 	private Rectangle colisionJugador;
-	private String titulo;
-	private int anchura, altura;
 	private Graphics graphics;
 
-	public Game(String titulo, int anchura, int altura) {
-		this.titulo = titulo;
-		this.anchura = anchura;
-		this.altura = altura;
+	public Game(String title, int width, int height) {
+		this.gameName = title;
+		this.windowWidth = width;
+		this.windowHeight = height;
 
 		try {
 			pantallaInicial = ImageIO.read(new File("res/img/pantallaFullPTG.png"));
@@ -61,7 +62,7 @@ public class Game implements Runnable{
 		world = new World(this, eventosTeclado);
 		world.init();
 
-		ventana = new Ventana(titulo, anchura, altura);
+		ventana = new Ventana(title, width, height);
 		ventana.getCanvas().addMouseListener(eventosRaton);
 		ventana.getCanvas().addMouseMotionListener(eventosRaton);
 		ventana.addKeyListener(eventosTeclado);
@@ -81,7 +82,7 @@ public class Game implements Runnable{
 		
 		//preparo la pantalla para diobujar la nueva imagen
 
-		graphics.clearRect(0, 0, anchura, altura); //si no hicieramos esto la pantalla parpadea sin parar.
+		graphics.clearRect(0, 0, windowWidth, windowHeight); //si no hicieramos esto la pantalla parpadea sin parar.
 
 		//dibujo en pantalla
 
@@ -95,23 +96,6 @@ public class Game implements Runnable{
 			//If the player has fallen, render the gameover image.
 			graphics.drawImage(gameOver, 0, 0, null);
 		}
-
-		/*
-		graphics.drawImage(pantallaInicial, 0, screenY, null);
-
-		if(!eventosTeclado.isArriba()) screenY = -2250;
-		else if(screenY < -1800) screenY += 3;
-		//else jugando += 4;
-		
-		if(eventosTeclado.isArriba())
-			jugador.render(graphics);
-				
-		if(screenY > -1801) {
-			world.tick();
-			world.render(graphics);
-		}
-		*/
-
 
 		//actualizo lo dibujado
 		
@@ -194,6 +178,10 @@ public class Game implements Runnable{
 	public BufferedImage getPantallaInicial(){
 		return pantallaInicial;
 	}
+
+	public int getWindowHeight(){ return windowHeight; }
+
+	public int getWindowWidth(){ return windowWidth; }
 	
 	public static void main(String[] args) {
 		Game game = new Game("Path To God", 300, 450);

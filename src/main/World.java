@@ -13,13 +13,14 @@ import main.plataformas.PlataformaComponentes;
 import main.plataformas.PlatformManager;
 
 import javax.imageio.ImageIO;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
 public class World {
 
 	private BufferedImage pantallaInicial;
 	private Game game;
 	private Random randX, randY;
-	private int lastjY, newJY, screenY, aleatorio, posicionX;
+	private int lastjY, newJY, screenY, aleatorio, posicionX, distanceTravelled;
 	protected int salto;
 	private PlatformManager manager;
 	private boolean platGravity, gameCreated;
@@ -29,7 +30,6 @@ public class World {
 
 	//TODO: automatic removal of each removed platform's collision rectangle.
 	//TODO: make infinite platforms work correctly
-	//TODO: a way to count the altitude that the player reaches (for scorecounting and knowing when and how the platforms should move)
 
 	public World(Game game, EventosTeclado evt) {
 		this.game = game;
@@ -82,6 +82,7 @@ public class World {
 		}else{
 			g.drawImage(pantallaInicial, 0, 0, null);
 			manager.render(g);	//renders the platforms only when the image stops moving and we start to play.
+			altitudeCounter(g);
 		}
 
 		player.render(g);
@@ -159,6 +160,30 @@ public class World {
 					platGravity = true;
 				}
 			}
+		}
+	}
+
+	public void altitudeCounter(Graphics g){
+
+		int numberWidth = 1;
+		//int fontSize = g.getFont().getSize();
+		//System.out.println(fontSize * 1.6 * 2);
+		g.setColor(Color.BLACK);  // Here
+		//g.drawString("40", (int) (game.getWindowWidth() - fontSize * 1.6), 10);
+		distanceTravelled = manager.getDistanceTravelled();
+		g.drawString(String.valueOf(distanceTravelled), getXcoordinate(distanceTravelled), 10);
+
+	}
+
+	public int getXcoordinate(int number){
+		if(number < 10){
+			return 280;
+		}else if(number < 100){
+			return 272;
+		}else if(number < 1000){
+			return 264;
+		}else{
+			return 256;
 		}
 	}
 
